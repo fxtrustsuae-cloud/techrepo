@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.uix/
+logs/
+.next/
+dist/
+build/
+coverage/
+.DS_Store
+*.log
+.vscode/

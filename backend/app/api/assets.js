@@ -20,15 +20,16 @@ router.get('/', authenticate, async (req, res, next) => {
 // POST /api/assets — Create asset
 router.post('/', authenticate, authorize('admin', 'super_admin'), async (req, res, next) => {
     try {
-        const { symbol, name, category, yahooSymbol, planRequired, displayOrder } = req.body;
+        const { symbol, name, category, yahooSymbol, displayOrder } = req.body;
         const asset = await Asset.create({
             tenant_id: req.tenantId,
             symbol: symbol.toUpperCase(),
             name,
             category,
             yahoo_symbol: yahooSymbol,
-            plan_required: planRequired || 'basic',
+            plan_required: 'free',
             display_order: displayOrder || 0,
+            is_active: true,
         });
         res.status(201).json(asset);
     } catch (error) {

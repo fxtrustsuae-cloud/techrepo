@@ -44,19 +44,12 @@ async function generateReport(tenantId, triggeredBy = null, trigger = 'manual') 
         const tenant = await Tenant.findByPk(tenantId);
         if (!tenant) throw new Error('Tenant not found');
 
-        // Determine which assets to include based on plan
-        const planLevels = { free: 0, basic: 1, pro: 2, premium: 3 };
-        const tenantPlanLevel = planLevels[tenant.plan] || 0;
-
         const assets = await Asset.findAll({
             where: { tenant_id: tenantId, is_active: true },
             order: [['display_order', 'ASC']],
         });
 
-        const eligibleAssets = assets.filter(a => {
-            const requiredLevel = planLevels[a.plan_required] || 0;
-            return requiredLevel <= tenantPlanLevel;
-        });
+        const eligibleAssets = assets;
 
         logger.info(`[Report] Processing ${eligibleAssets.length} assets for tenant ${tenant.name}`);
 

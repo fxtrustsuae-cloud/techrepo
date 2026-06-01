@@ -1,31 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { superAdminApi } from '@/lib/api';
 import { Search, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import toast from 'react-hot-toast';
 import { SuperAdminTenant, SuperAdminTenantsResponse } from '@/lib/types';
 
 export default function SuperAdminTenantsPage() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
-    const queryClient = useQueryClient();
 
     const { data, isLoading } = useQuery<SuperAdminTenantsResponse>({
         queryKey: ['super-admin-tenants', page, search],
         queryFn: () => superAdminApi.getTenants(page, search).then(r => r.data),
-    });
-
-    const updateMutation = useMutation({
-        mutationFn: ({ id, plan }: { id: string; plan: string }) =>
-            superAdminApi.updateTenant(id, { plan }),
-        onSuccess: () => {
-            toast.success('Tenant updated');
-            queryClient.invalidateQueries({ queryKey: ['super-admin-tenants'] });
-        },
     });
 
     const tenants = data?.tenants || [];
@@ -50,11 +39,10 @@ export default function SuperAdminTenantsPage() {
                         <thead>
                             <tr>
                                 <th>Tenant</th>
-                                <th>Plan</th>
+                                <th>Access</th>
                                 <th>Status</th>
                                 <th>Users</th>
                                 <th>Joined</th>
-                                <th>Plan Control</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -62,7 +50,7 @@ export default function SuperAdminTenantsPage() {
                             {isLoading ? (
                                 Array(8).fill(0).map((_, i) => (
                                     <tr key={i}>
-                                        {Array(7).fill(0).map((_, j) => <td key={j}><div className="skeleton" style={{ height: '16px', width: j === 0 ? '160px' : '80px' }} /></td>)}
+                                        {Array(6).fill(0).map((_, j) => <td key={j}><div className="skeleton" style={{ height: '16px', width: j === 0 ? '160px' : '80px' }} /></td>)}
                                     </tr>
                                 ))
                             ) : tenants.map((tenant: SuperAdminTenant) => (
@@ -74,8 +62,8 @@ export default function SuperAdminTenantsPage() {
                                         </div>
                                     </td>
                                     <td>
-                                        <span className={`badge ${tenant.plan === 'free' ? 'badge-neutral' : tenant.plan === 'basic' ? 'badge-info' : tenant.plan === 'pro' ? 'badge-warning' : 'badge-success'}`} style={{ textTransform: 'capitalize' }}>
-                                            {tenant.plan}
+                                        <span className="badge badge-success">
+                                            full access
                                         </span>
                                     </td>
                                     <td>
@@ -88,16 +76,6 @@ export default function SuperAdminTenantsPage() {
                                     </td>
                                     <td style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
                                         {format(new Date(tenant.created_at), 'MMM dd, yyyy')}
-                                    </td>
-                                    <td>
-                                        <select
-                                            className="input-field"
-                                            value={tenant.plan}
-                                            onChange={e => updateMutation.mutate({ id: tenant.id, plan: e.target.value })}
-                                            style={{ fontSize: '12px', padding: '5px 8px' }}
-                                        >
-                                            {['free', 'basic', 'pro', 'premium'].map(p => <option key={p} value={p}>{p}</option>)}
-                                        </select>
                                     </td>
                                     <td>
                                         <Link href={`/super-admin/tenants/${tenant.id}`} style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)', textDecoration: 'none' }}>

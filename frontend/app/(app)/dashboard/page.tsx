@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { dashboardApi, reportsApi } from '@/lib/api';
-import { downloadPdfFromResponse } from '@/lib/pdf-download';
 import { useAuth } from '@/lib/auth-context';
 import { DashboardReport, DashboardResponse, getApiErrorMessage } from '@/lib/types';
 import {
@@ -44,7 +43,7 @@ export default function DashboardPage() {
             anchor.href = url;
             anchor.target = '_blank';
             anchor.click();
-        } catch (error: unknown) {
+        } catch {
             toast.error('Failed to trigger download');
         } finally {
             setDownloadingId(null);
@@ -253,27 +252,24 @@ export default function DashboardPage() {
                             )}
                         </div>
 
-                        {/* Plan Info */}
+                        {/* Access Info */}
                         <div style={{
                             background: 'linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))',
                             border: '1px solid rgba(59,130,246,0.2)',
                             borderRadius: '14px', padding: '20px',
                         }}>
                             <div style={{ fontSize: '13px', fontWeight: '600', color: '#60a5fa', marginBottom: '8px' }}>
-                                Current Plan
+                                Access
                             </div>
-                            <div style={{ fontSize: '22px', fontWeight: '800', color: 'white', marginBottom: '4px', textTransform: 'capitalize' }}>
-                                {tenant?.plan || 'Free'}
+                            <div style={{ fontSize: '22px', fontWeight: '800', color: 'white', marginBottom: '4px' }}>
+                                Full Access
                             </div>
                             <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '14px' }}>
-                                {tenant?.plan === 'free' ? 'Upgrade to unlock more assets & features' :
-                                    tenant?.plan === 'basic' ? 'Forex pairs included' :
-                                        tenant?.plan === 'pro' ? 'Forex + Gold + Indices' :
-                                            'All assets + custom branding'}
+                                All supported assets and reporting features are enabled for your workspace.
                             </div>
-                            <a href="/billing">
+                            <a href="/assets">
                                 <button className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: '13px', padding: '9px' }}>
-                                    {tenant?.plan === 'free' ? 'Upgrade Now →' : 'Manage Plan →'}
+                                    Review Assets →
                                 </button>
                             </a>
                         </div>

@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { ApiError, Asset, AssetCreatePayload, AssetUpdatePayload, getApiErrorMessage } from '@/lib/types';
 
 const CATEGORIES = ['forex', 'gold', 'indices', 'crypto', 'commodity'];
-const PLANS = ['free', 'basic', 'pro', 'premium'];
 const CATEGORY_COLORS: Record<string, string> = {
     forex: '#3b82f6', gold: '#f59e0b', indices: '#8b5cf6', crypto: '#f97316', commodity: '#10b981',
 };
@@ -20,7 +19,7 @@ export default function AssetsPage() {
         name: '',
         category: 'forex',
         yahooSymbol: '',
-        planRequired: 'basic',
+        planRequired: 'free',
     });
     const queryClient = useQueryClient();
 
@@ -57,7 +56,7 @@ export default function AssetsPage() {
         },
     });
 
-    const resetForm = () => setForm({ symbol: '', name: '', category: 'forex', yahooSymbol: '', planRequired: 'basic' });
+    const resetForm = () => setForm({ symbol: '', name: '', category: 'forex', yahooSymbol: '', planRequired: 'free' });
 
     const toggleActive = (asset: Asset) => {
         updateMutation.mutate({ id: asset.id, data: { isActive: !asset.is_active } });
@@ -104,8 +103,7 @@ export default function AssetsPage() {
                                 <th>Symbol</th>
                                 <th>Name</th>
                                 <th>Category</th>
-                                <th>Yahoo Symbol</th>
-                                <th>Plan Required</th>
+                                <th>Market Data Symbol</th>
                                 <th>RSI</th>
                                 <th>EMA Fast/Slow</th>
                                 <th style={{ textAlign: 'right' }}>Actions</th>
@@ -115,7 +113,7 @@ export default function AssetsPage() {
                             {isLoading ? (
                                 Array(5).fill(0).map((_, i) => (
                                     <tr key={i}>
-                                        {Array(9).fill(0).map((_, j) => (
+                                        {Array(8).fill(0).map((_, j) => (
                                             <td key={j}><div className="skeleton" style={{ height: '16px', width: j === 2 ? '140px' : '70px' }} /></td>
                                         ))}
                                     </tr>
@@ -145,11 +143,6 @@ export default function AssetsPage() {
                                     </td>
                                     <td style={{ fontSize: '12px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
                                         {asset.yahoo_symbol}
-                                    </td>
-                                    <td>
-                                        <span className={`badge ${asset.plan_required === 'free' ? 'badge-neutral' : asset.plan_required === 'basic' ? 'badge-info' : asset.plan_required === 'pro' ? 'badge-warning' : 'badge-success'}`}>
-                                            {asset.plan_required}
-                                        </span>
                                     </td>
                                     <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{asset.rsi_period}</td>
                                     <td style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{asset.ema_fast} / {asset.ema_slow}</td>
@@ -189,8 +182,8 @@ export default function AssetsPage() {
                                         onChange={e => setForm(f => ({ ...f, symbol: e.target.value.toUpperCase() }))} />
                                 </div>
                                 <div>
-                                    <label className="label">Yahoo Finance Symbol *</label>
-                                    <input className="input-field" placeholder="EURUSD=X" value={form.yahooSymbol}
+                                    <label className="label">Market Data Symbol *</label>
+                                    <input className="input-field" placeholder="EUR/USD" value={form.yahooSymbol}
                                         onChange={e => setForm(f => ({ ...f, yahooSymbol: e.target.value }))} />
                                 </div>
                             </div>
@@ -199,21 +192,12 @@ export default function AssetsPage() {
                                 <input className="input-field" placeholder="Euro / US Dollar" value={form.name}
                                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                             </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                <div>
-                                    <label className="label">Category</label>
-                                    <select className="input-field" value={form.category}
-                                        onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-                                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="label">Plan Required</label>
-                                    <select className="input-field" value={form.planRequired}
-                                        onChange={e => setForm(f => ({ ...f, planRequired: e.target.value }))}>
-                                        {PLANS.map(p => <option key={p} value={p}>{p}</option>)}
-                                    </select>
-                                </div>
+                            <div>
+                                <label className="label">Category</label>
+                                <select className="input-field" value={form.category}
+                                    onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
+                                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
                             </div>
                         </div>
 
@@ -232,7 +216,7 @@ export default function AssetsPage() {
                         </div>
 
                         <div style={{ marginTop: '14px', padding: '12px', background: 'rgba(59,130,246,0.06)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-muted)' }}>
-                            💡 Yahoo Finance symbols: EURUSD=X (Forex), GC=F (Gold), ^DJI (Dow), BTC-USD (Bitcoin)
+                            💡 Full access is enabled for every workspace. Examples: EUR/USD (Forex), XAU/USD (Gold), ^DJI (Dow fallback), BTC/USD (Bitcoin)
                         </div>
                     </div>
                 </div>

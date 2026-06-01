@@ -139,7 +139,7 @@ export default function SchedulerPage() {
                             <div style={{ fontWeight: '700', marginBottom: '14px', fontSize: '14px' }}>How It Works</div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 {[
-                                    { step: '1', title: 'Data Fetch', desc: 'Market data pulled from Yahoo Finance for all active assets' },
+                                    { step: '1', title: 'Data Fetch', desc: 'Market data pulled from the configured provider for all active assets' },
                                     { step: '2', title: 'Analysis', desc: 'Technical indicators (RSI, MACD, EMA, Bollinger, ATR) calculated' },
                                     { step: '3', title: 'Charts', desc: 'Candlestick charts with overlays generated for each asset' },
                                     { step: '4', title: 'Commentary', desc: 'Institutional-grade analysis text generated automatically' },

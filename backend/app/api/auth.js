@@ -28,9 +28,10 @@ router.post('/register', async (req, res, next) => {
         const tenant = await Tenant.create({
             name: companyName,
             slug,
-            plan: 'free',
+            plan: 'premium',
+            subscription_status: 'active',
             branding_company_name: companyName,
-            trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14-day trial
+            trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
         });
 
         // Create admin user
@@ -149,22 +150,22 @@ router.post('/change-password', authenticate, async (req, res, next) => {
 async function seedDefaultAssets(tenantId) {
     const { Asset } = require('../models');
     const defaultAssets = [
-        { symbol: 'EURUSD', name: 'Euro / US Dollar', category: 'forex', yahoo_symbol: 'EURUSD=X', plan_required: 'free', display_order: 1 },
-        { symbol: 'GBPUSD', name: 'British Pound / US Dollar', category: 'forex', yahoo_symbol: 'GBPUSD=X', plan_required: 'basic', display_order: 2 },
-        { symbol: 'USDJPY', name: 'US Dollar / Japanese Yen', category: 'forex', yahoo_symbol: 'USDJPY=X', plan_required: 'basic', display_order: 3 },
-        { symbol: 'AUDUSD', name: 'Australian Dollar / US Dollar', category: 'forex', yahoo_symbol: 'AUDUSD=X', plan_required: 'basic', display_order: 4 },
-        { symbol: 'USDCHF', name: 'US Dollar / Swiss Franc', category: 'forex', yahoo_symbol: 'USDCHF=X', plan_required: 'basic', display_order: 5 },
-        { symbol: 'XAUUSD', name: 'Gold / US Dollar', category: 'gold', yahoo_symbol: 'GC=F', plan_required: 'pro', display_order: 6 },
-        { symbol: 'US30', name: 'Dow Jones Industrial Average', category: 'indices', yahoo_symbol: '^DJI', plan_required: 'pro', display_order: 7 },
-        { symbol: 'SPX500', name: 'S&P 500 Index', category: 'indices', yahoo_symbol: '^GSPC', plan_required: 'pro', display_order: 8 },
-        { symbol: 'NAS100', name: 'Nasdaq 100 Index', category: 'indices', yahoo_symbol: '^NDX', plan_required: 'pro', display_order: 9 },
-        { symbol: 'BTCUSD', name: 'Bitcoin / US Dollar', category: 'crypto', yahoo_symbol: 'BTC-USD', plan_required: 'premium', display_order: 10 },
+        { symbol: 'EURUSD', name: 'Euro / US Dollar', category: 'forex', yahoo_symbol: 'EUR/USD', plan_required: 'free', display_order: 1 },
+        { symbol: 'GBPUSD', name: 'British Pound / US Dollar', category: 'forex', yahoo_symbol: 'GBP/USD', plan_required: 'free', display_order: 2 },
+        { symbol: 'USDJPY', name: 'US Dollar / Japanese Yen', category: 'forex', yahoo_symbol: 'USD/JPY', plan_required: 'free', display_order: 3 },
+        { symbol: 'AUDUSD', name: 'Australian Dollar / US Dollar', category: 'forex', yahoo_symbol: 'AUD/USD', plan_required: 'free', display_order: 4 },
+        { symbol: 'USDCHF', name: 'US Dollar / Swiss Franc', category: 'forex', yahoo_symbol: 'USD/CHF', plan_required: 'free', display_order: 5 },
+        { symbol: 'XAUUSD', name: 'Gold / US Dollar', category: 'gold', yahoo_symbol: 'XAU/USD', plan_required: 'free', display_order: 6 },
+        { symbol: 'US30', name: 'Dow Jones Industrial Average', category: 'indices', yahoo_symbol: '^DJI', plan_required: 'free', display_order: 7 },
+        { symbol: 'SPX500', name: 'S&P 500 Index', category: 'indices', yahoo_symbol: '^GSPC', plan_required: 'free', display_order: 8 },
+        { symbol: 'NAS100', name: 'Nasdaq 100 Index', category: 'indices', yahoo_symbol: '^NDX', plan_required: 'free', display_order: 9 },
+        { symbol: 'BTCUSD', name: 'Bitcoin / US Dollar', category: 'crypto', yahoo_symbol: 'BTC/USD', plan_required: 'free', display_order: 10 },
     ];
 
     for (const asset of defaultAssets) {
         await Asset.findOrCreate({
             where: { tenant_id: tenantId, symbol: asset.symbol },
-            defaults: { ...asset, tenant_id: tenantId, is_active: asset.plan_required === 'free' },
+            defaults: { ...asset, tenant_id: tenantId, is_active: true },
         });
     }
 }

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Building, Users, FileText, TrendingUp, Shield } from 'lucide-react';
 import { format } from 'date-fns';
 import { useEffect } from 'react';
-import { SuperAdminDashboardResponse, SuperAdminPlanDistribution } from '@/lib/types';
+import { SuperAdminDashboardResponse } from '@/lib/types';
 
 export default function SuperAdminPage() {
     const { user } = useAuth();
@@ -32,13 +32,6 @@ export default function SuperAdminPage() {
         { title: 'Total Reports', value: stats?.totalReports, icon: FileText, color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
         { title: 'Active Subscribers', value: stats?.totalSubscribers, icon: TrendingUp, color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)' },
     ];
-
-    const getPlanCount = (item: SuperAdminPlanDistribution): number => {
-        const raw = item.dataValues?.count ?? item.count ?? 0;
-        return Number(raw);
-    };
-
-    const maxPlanCount = Math.max(1, ...(data?.planDistribution || []).map(getPlanCount));
 
     return (
         <div>
@@ -94,25 +87,20 @@ export default function SuperAdminPage() {
                     </div>
 
                     <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px' }}>
-                        <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '16px' }}>Plan Distribution</div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {(data?.planDistribution || []).map((p) => {
-                                const planColors: Record<string, string> = { free: '#64748b', basic: '#3b82f6', pro: '#f59e0b', premium: '#8b5cf6' };
-                                const color = planColors[p.plan] || '#64748b';
-                                const count = getPlanCount(p);
-                                const pct = (count / maxPlanCount) * 100;
-                                return (
-                                    <div key={p.plan}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                                            <span style={{ fontSize: '13px', textTransform: 'capitalize', fontWeight: '600' }}>{p.plan}</span>
-                                            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{count} tenant{count !== 1 ? 's' : ''}</span>
-                                        </div>
-                                        <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-                                            <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '3px', transition: 'width 0.4s ease' }} />
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                        <div style={{ fontWeight: '600', fontSize: '14px', marginBottom: '16px' }}>Access Policy</div>
+                        <div style={{
+                            background: 'linear-gradient(135deg, rgba(59,130,246,0.12), rgba(16,185,129,0.12))',
+                            border: '1px solid rgba(59,130,246,0.2)',
+                            borderRadius: '12px',
+                            padding: '18px',
+                            marginBottom: '16px',
+                        }}>
+                            <div style={{ fontSize: '20px', fontWeight: '800', color: 'white', marginBottom: '6px' }}>
+                                Full access for all tenants
+                            </div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                                Billing and plan-based feature gates have been removed. Every tenant can use all supported assets and reporting features.
+                            </div>
                         </div>
                         <div style={{ marginTop: '20px' }}>
                             <a href="/super-admin/tenants">

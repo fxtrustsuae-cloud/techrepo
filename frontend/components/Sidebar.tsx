@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import {
     LayoutDashboard, FileText, BarChart2, Users, Settings,
-    Calendar, LogOut, CreditCard, Shield, TrendingUp
+    Calendar, LogOut, Shield, TrendingUp
 } from 'lucide-react';
 
 const navItems = [
@@ -14,7 +14,6 @@ const navItems = [
     { href: '/assets', icon: TrendingUp, label: 'Assets', roles: ['admin', 'super_admin'] },
     { href: '/subscribers', icon: Users, label: 'Subscribers', roles: ['admin', 'analyst', 'super_admin'] },
     { href: '/scheduler', icon: Calendar, label: 'Scheduler', roles: ['admin', 'super_admin'] },
-    { href: '/billing', icon: CreditCard, label: 'Billing & Plans', roles: ['admin', 'super_admin'] },
     { href: '/settings', icon: Settings, label: 'Settings', roles: ['admin', 'super_admin'] },
 ];
 
@@ -32,13 +31,6 @@ export default function Sidebar() {
 
     const visibleItems = navItems.filter(item => item.roles.includes(user.role));
     const isSuperAdmin = user.role === 'super_admin';
-
-    const planColors: Record<string, string> = {
-        free: 'badge-neutral',
-        basic: 'badge-info',
-        pro: 'badge-warning',
-        premium: 'badge-success',
-    };
 
     return (
         <aside className="sidebar">
@@ -72,9 +64,9 @@ export default function Sidebar() {
                         <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {tenant.name}
                         </div>
-                        <span className={`badge ${planColors[tenant.plan] || 'badge-neutral'}`} style={{ fontSize: '11px' }}>
-                            {tenant.plan?.toUpperCase()}
-                        </span>
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                            Full access enabled
+                        </div>
                     </div>
                 )}
 

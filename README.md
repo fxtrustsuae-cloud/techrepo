@@ -74,8 +74,10 @@ DB_PASSWORD=yourpassword
 # JWT (change this!)
 JWT_SECRET=your-strong-random-secret-key
 
-# Market Data (free tier available)
-ALPHA_VANTAGE_API_KEY=demo    # get free key at alphavantage.co
+# Market Data
+MARKET_DATA_PROVIDER=twelvedata
+MARKET_DATA_FALLBACK_PROVIDER=tradingview
+TWELVE_DATA_API_KEY=your_twelve_data_api_key
 
 # Email (for report delivery)
 SMTP_HOST=smtp.gmail.com
@@ -98,7 +100,7 @@ CHROMIUM_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
 ### Core System
 | Feature | Description |
 |---------|-------------|
-| **Market Data** | Yahoo Finance (yfinance) — Forex, Gold, Indices, Crypto |
+| **Market Data** | Twelve Data with TradingView fallback for unresolved symbols |
 | **Indicators** | RSI-14, MACD, EMA-50/200, Bollinger Bands, ATR-14 |
 | **S/R Detection** | Automatic swing high/low detection |
 | **Fibonacci** | Auto-calculated retracement levels |
@@ -147,7 +149,7 @@ Technical report/
 │   │   │   ├── auth.js        # JWT auth + role guards
 │   │   │   └── errorHandler.js
 │   │   ├── services/
-│   │   │   ├── market_data/   # Yahoo Finance fetcher
+│   │   │   ├── market_data/   # Twelve Data + TradingView fallback
 │   │   │   ├── indicators/    # TA calculations (RSI/MACD/EMA...)
 │   │   │   ├── commentary/    # Rule-based text generator
 │   │   │   ├── charts/        # Canvas candlestick charts
@@ -219,7 +221,7 @@ Reports can be triggered:
 - **Via API**: `POST /api/reports/generate-sync`
 
 **Generation flow:**
-1. Fetch daily OHLCV data from Yahoo Finance for all eligible assets
+1. Fetch daily OHLCV data from the configured market-data provider for all eligible assets
 2. Calculate all technical indicators (RSI, MACD, EMA, BB, ATR, S/R, Fibonacci)
 3. Determine trade bias (Bullish/Bearish/Neutral) from indicator signals
 4. Generate candlestick charts with Canvas API
@@ -229,18 +231,18 @@ Reports can be triggered:
 
 ---
 
-## 🛠 Supported Yahoo Finance Symbols
+## 🛠 Supported Market Data Symbols
 
 | Asset | Symbol |
 |-------|--------|
-| EUR/USD | `EURUSD=X` |
-| GBP/USD | `GBPUSD=X` |
-| USD/JPY | `USDJPY=X` |
-| USD/CHF | `USDCHF=X` |
-| AUD/USD | `AUDUSD=X` |
-| Gold | `GC=F` |
+| EUR/USD | `EUR/USD` |
+| GBP/USD | `GBP/USD` |
+| USD/JPY | `USD/JPY` |
+| USD/CHF | `USD/CHF` |
+| AUD/USD | `AUD/USD` |
+| Gold | `XAU/USD` |
 | Dow Jones | `^DJI` |
 | S&P 500 | `^GSPC` |
 | Nasdaq 100 | `^NDX` |
-| Bitcoin | `BTC-USD` |
-| Ethereum | `ETH-USD` |
+| Bitcoin | `BTC/USD` |
+| Ethereum | `ETH/USD` |

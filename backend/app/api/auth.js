@@ -1,6 +1,5 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid');
 const { User, Tenant } = require('../models');
 const { generateToken, authenticate } = require('../middleware/auth');
 const logger = require('../core/logger');

@@ -96,7 +96,7 @@ export default function DashboardPage() {
         <div>
             {/* Page Header */}
             <div className="page-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div className="page-header-row">
                     <div>
                         <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)', marginBottom: '4px' }}>
                             Welcome back, {user?.firstName || 'Analyst'} 👋
@@ -105,7 +105,7 @@ export default function DashboardPage() {
                             {format(new Date(), 'EEEE, MMMM dd, yyyy')} · {tenant?.name}
                         </p>
                     </div>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div className="page-actions">
                         <button onClick={() => refetch()} className="btn-secondary">
                             <RefreshCw size={14} />
                             Refresh
@@ -120,7 +120,7 @@ export default function DashboardPage() {
 
             <div className="page-content">
                 {/* Stats Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '14px', marginBottom: '24px' }}>
+                <div className="stats-grid">
                     {statCards.map((card) => (
                         <div key={card.title} className="stat-card animate-fade-in">
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -138,9 +138,9 @@ export default function DashboardPage() {
                     ))}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }}>
+                <div className="split-layout">
                     {/* Recent Reports */}
-                    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                    <div className="table-shell">
                         <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontWeight: '600', fontSize: '15px' }}>Recent Reports</div>
                             <a href="/reports" style={{ fontSize: '13px', color: '#60a5fa', textDecoration: 'none' }}>View all →</a>
@@ -219,7 +219,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Right Panel */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div className="side-panel-stack">
                         {/* Last Report Card */}
                         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px' }}>
                             <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '14px' }}>

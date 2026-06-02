@@ -38,7 +38,7 @@ export default function SuperAdminReportsPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="table-shell">
                     <table className="data-table">
                         <thead>
                             <tr>
@@ -88,7 +88,7 @@ export default function SuperAdminReportsPage() {
                         </tbody>
                     </table>
                     {(data?.totalPages || 1) > 1 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', padding: '16px', borderTop: '1px solid var(--border)' }}>
+                        <div className="pagination-row">
                             {Array.from({ length: data?.totalPages || 1 }, (_, i) => i + 1).map((p) => (
                                 <button
                                     key={p}

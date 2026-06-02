@@ -65,16 +65,18 @@ export default function AssetsPage() {
     return (
         <div>
             <div className="page-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="page-header-row">
                     <div>
                         <h1 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '4px' }}>Assets</h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                             Configure which market instruments to include in reports
                         </p>
                     </div>
-                    <button onClick={() => { resetForm(); setShowAddModal(true); }} className="btn-primary">
-                        <Plus size={15} /> Add Asset
-                    </button>
+                    <div className="page-actions">
+                        <button onClick={() => { resetForm(); setShowAddModal(true); }} className="btn-primary">
+                            <Plus size={15} /> Add Asset
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -95,7 +97,7 @@ export default function AssetsPage() {
                 </div>
 
                 {/* Assets Table */}
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="table-shell">
                     <table className="data-table">
                         <thead>
                             <tr>
@@ -175,7 +177,7 @@ export default function AssetsPage() {
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div className="form-grid-2">
                                 <div>
                                     <label className="label">Symbol *</label>
                                     <input className="input-field" placeholder="EURUSD" value={form.symbol}
@@ -201,13 +203,13 @@ export default function AssetsPage() {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '22px' }}>
-                            <button onClick={() => setShowAddModal(false)} className="btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>
+                        <div className="modal-actions" style={{ marginTop: '22px' }}>
+                            <button onClick={() => setShowAddModal(false)} className="btn-secondary">
                                 Cancel
                             </button>
                             <button
                                 onClick={() => createMutation.mutate(form)}
-                                className="btn-primary" style={{ flex: 1, justifyContent: 'center' }}
+                                className="btn-primary"
                                 disabled={!form.symbol || !form.name || createMutation.isPending}
                             >
                                 <Save size={14} />

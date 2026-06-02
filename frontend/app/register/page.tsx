@@ -34,13 +34,8 @@ export default function RegisterPage() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh', display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-            padding: '24px',
-        }}>
-            <div style={{ width: '100%', maxWidth: '460px' }}>
+        <div className="auth-center-shell">
+            <div className="auth-register-shell">
                 <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                     <div style={{
                         width: '48px', height: '48px',
@@ -65,7 +60,7 @@ export default function RegisterPage() {
                     boxShadow: 'var(--shadow)',
                 }}>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div className="form-grid-2">
                             <div>
                                 <label className="label">First Name</label>
                                 <input className="input-field" placeholder="John" value={form.firstName}

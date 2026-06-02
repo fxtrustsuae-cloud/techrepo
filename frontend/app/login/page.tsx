@@ -31,23 +31,9 @@ export default function LoginPage() {
     };
 
     return (
-        <div style={{
-            minHeight: '100vh',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            background: '#0f172a',
-        }}>
+        <div className="auth-split">
             {/* Left Panel - Branding */}
-            <div style={{
-                background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                padding: '48px',
-                borderRight: '1px solid rgba(59,130,246,0.15)',
-                position: 'relative',
-                overflow: 'hidden',
-            }}>
+            <div className="auth-hero">
                 {/* Radial accent */}
                 <div style={{
                     position: 'absolute', top: '20%', right: '-100px',
@@ -71,7 +57,7 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="auth-hero-panel">
                     <div style={{
                         display: 'inline-block',
                         background: 'rgba(59,130,246,0.15)',
@@ -124,14 +110,8 @@ export default function LoginPage() {
             </div>
 
             {/* Right Panel - Login Form */}
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '48px',
-                background: '#0f172a',
-            }}>
-                <div style={{ width: '100%', maxWidth: '420px' }}>
+            <div className="auth-panel">
+                <div className="auth-card-shell">
                     <div style={{ marginBottom: '36px' }}>
                         <h2 style={{ fontSize: '28px', fontWeight: '700', color: 'white', marginBottom: '8px' }}>
                             Sign in to your account
@@ -215,14 +195,6 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-
-            <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
-          div[style*="grid-template-columns"] > div:first-child { display: none; }
-        }
-      `}</style>
         </div>
     );
 }

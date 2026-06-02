@@ -75,12 +75,12 @@ export default function ReportsPage() {
     return (
         <div>
             <div className="page-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="page-header-row">
                     <div>
                         <h1 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '4px' }}>Reports</h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>{total} total reports</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div className="page-actions">
                         <button onClick={() => refetch()} className="btn-secondary">
                             <RefreshCw size={14} /> Refresh
                         </button>
@@ -97,9 +97,9 @@ export default function ReportsPage() {
                 <div style={{
                     background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.15)',
                     borderRadius: '10px', padding: '14px 18px', marginBottom: '20px',
-                    display: 'flex', alignItems: 'center', gap: '12px', fontSize: '13px',
+                    fontSize: '13px',
                     color: 'var(--text-secondary)',
-                }}>
+                }} className="banner-inline">
                     <Play size={16} style={{ color: '#60a5fa', flexShrink: 0 }} />
                     Click &quot;Generate Now&quot; to instantly create a PDF report for all configured assets.
                     The report includes pivot levels (PP, S1-S3, R1-R3), chart context, and pivot-based trade commentary.
@@ -112,7 +112,7 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Reports Table */}
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="table-shell">
                     <table className="data-table">
                         <thead>
                             <tr>
@@ -216,7 +216,7 @@ export default function ReportsPage() {
 
                     {/* Pagination */}
                     {totalPages > 1 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', padding: '16px', borderTop: '1px solid var(--border)' }}>
+                        <div className="pagination-row">
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                                 <button key={p} onClick={() => setPage(p)}
                                     className={p === page ? 'btn-primary' : 'btn-secondary'}

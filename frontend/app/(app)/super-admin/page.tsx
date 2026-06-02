@@ -47,7 +47,7 @@ export default function SuperAdminPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginBottom: '24px' }}>
+                <div className="stats-grid">
                     {statCards.map(card => (
                         <div key={card.title} className="stat-card">
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
@@ -63,8 +63,8 @@ export default function SuperAdminPage() {
                     ))}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                    <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="two-column-layout">
+                    <div className="table-shell">
                         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ fontWeight: '600', fontSize: '14px' }}>Recent Reports (All Tenants)</div>
                             <a href="/super-admin/reports" style={{ fontSize: '13px', color: '#60a5fa', textDecoration: 'none' }}>View all {'->'}</a>

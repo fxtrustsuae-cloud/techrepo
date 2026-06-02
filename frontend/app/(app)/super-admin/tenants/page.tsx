@@ -27,14 +27,14 @@ export default function SuperAdminTenantsPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ position: 'relative', maxWidth: '320px', marginBottom: '20px' }}>
+                <div className="header-search">
                     <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                     <input className="input-field" placeholder="Search tenants..." value={search}
                         onChange={e => { setSearch(e.target.value); setPage(1); }}
                         style={{ paddingLeft: '36px' }} />
                 </div>
 
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="table-shell">
                     <table className="data-table">
                         <thead>
                             <tr>

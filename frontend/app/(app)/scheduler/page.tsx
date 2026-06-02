@@ -64,7 +64,7 @@ export default function SchedulerPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '20px' }}>
+                <div className="split-layout">
                     <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px' }}>
                         <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '24px' }}>Schedule Configuration</div>
 
@@ -74,7 +74,7 @@ export default function SchedulerPage() {
                                     <Clock size={14} style={{ color: '#60a5fa' }} />
                                     Daily Report Time
                                 </label>
-                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                <div className="inline-field-row">
                                     <input
                                         type="time"
                                         className="input-field"
@@ -134,7 +134,7 @@ export default function SchedulerPage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div className="side-panel-stack">
                         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '20px' }}>
                             <div style={{ fontWeight: '700', marginBottom: '14px', fontSize: '14px' }}>How It Works</div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

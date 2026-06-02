@@ -52,7 +52,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ maxWidth: '660px' }}>
+                <div className="content-narrow">
                     <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '28px', marginBottom: '20px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '22px' }}>
                             <div style={{
@@ -84,7 +84,7 @@ export default function SettingsPage() {
                                     <Palette size={13} style={{ color: '#60a5fa' }} />
                                     Brand Primary Color
                                 </label>
-                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                <div className="inline-field-row">
                                     <input
                                         type="color"
                                         value={branding.primaryColor}
@@ -156,8 +156,7 @@ export default function SettingsPage() {
                         <div style={{
                             background: branding.primaryColor || '#1a56db',
                             borderRadius: '10px', padding: '20px',
-                            display: 'flex', alignItems: 'center', gap: '12px',
-                        }}>
+                        }} className="inline-field-row">
                             <div style={{
                                 width: '40px', height: '40px',
                                 background: 'rgba(255,255,255,0.15)',

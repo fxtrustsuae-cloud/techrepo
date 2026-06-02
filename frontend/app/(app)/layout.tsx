@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     if (!user) return null;
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div className="app-shell">
             <Sidebar />
             <main className="main-content">
                 {children}

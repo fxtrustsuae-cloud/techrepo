@@ -82,14 +82,14 @@ export default function SubscribersPage() {
     return (
         <div>
             <div className="page-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="page-header-row">
                     <div>
                         <h1 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '4px' }}>Subscribers</h1>
                         <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
                             {active} active - {subscribers.length} total
                         </p>
                     </div>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div className="page-actions">
                         <button onClick={() => setShowBulk(true)} className="btn-secondary">
                             <Upload size={14} /> Bulk Import
                         </button>
@@ -101,7 +101,7 @@ export default function SubscribersPage() {
             </div>
 
             <div className="page-content">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '20px' }}>
+                <div className="stats-grid-3">
                     {[
                         { label: 'Total Subscribers', value: subscribers.length, color: '#3b82f6' },
                         { label: 'Active', value: active, color: '#10b981' },
@@ -114,7 +114,7 @@ export default function SubscribersPage() {
                     ))}
                 </div>
 
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', overflow: 'hidden' }}>
+                <div className="table-shell">
                     <table className="data-table">
                         <thead>
                             <tr>
@@ -191,10 +191,10 @@ export default function SubscribersPage() {
                                     onChange={e => setName(e.target.value)} />
                             </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                            <button onClick={() => setShowAdd(false)} className="btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
+                        <div className="modal-actions">
+                            <button onClick={() => setShowAdd(false)} className="btn-secondary">Cancel</button>
                             <button onClick={() => createMutation.mutate()} className="btn-primary"
-                                style={{ flex: 1, justifyContent: 'center' }} disabled={!email || createMutation.isPending}>
+                                disabled={!email || createMutation.isPending}>
                                 <Save size={14} /> {createMutation.isPending ? 'Adding...' : 'Add Subscriber'}
                             </button>
                         </div>
@@ -218,9 +218,9 @@ export default function SubscribersPage() {
                             onChange={e => setBulkText(e.target.value)}
                             style={{ fontFamily: 'monospace', fontSize: '13px' }}
                         />
-                        <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-                            <button onClick={() => setShowBulk(false)} className="btn-secondary" style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
-                            <button onClick={handleBulkImport} className="btn-primary" style={{ flex: 1, justifyContent: 'center' }}
+                        <div className="modal-actions" style={{ marginTop: '16px' }}>
+                            <button onClick={() => setShowBulk(false)} className="btn-secondary">Cancel</button>
+                            <button onClick={handleBulkImport} className="btn-primary"
                                 disabled={!bulkText || bulkMutation.isPending}>
                                 <Upload size={14} /> {bulkMutation.isPending ? 'Importing...' : 'Import'}
                             </button>

@@ -13,7 +13,13 @@ RUN apk add --no-cache \
     python3 \
     py3-setuptools \
     make \
-    g++
+    g++ \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 COPY package*.json ./
 RUN npm install --omit=dev
@@ -21,6 +27,8 @@ RUN npm install --omit=dev
 COPY . .
 
 RUN mkdir -p reports charts logs
+
+ENV CHROMIUM_PATH=/usr/bin/chromium-browser
 
 EXPOSE 5000
 

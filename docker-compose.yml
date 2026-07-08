@@ -43,7 +43,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       REDIS_URL: redis://redis:6379
-      FRONTEND_URL: http://localhost:3001
+      FRONTEND_URL: https://report.achieverfx.com
     depends_on:
       postgres:
         condition: service_healthy
@@ -62,7 +62,7 @@ services:
     ports:
       - "127.0.0.1:3001:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+      NEXT_PUBLIC_API_URL: https://report.achieverfx.com/api
     depends_on:
       - backend
 

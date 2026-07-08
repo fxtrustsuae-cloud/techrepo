@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     librsvg-dev \
     pixman-dev \
     python3 \
+    py3-setuptools \
     make \
     g++
 

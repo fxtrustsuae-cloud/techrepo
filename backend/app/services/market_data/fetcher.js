@@ -2,6 +2,7 @@ const logger = require('../../core/logger');
 const { fetchTradingViewOHLCV, fetchTradingViewQuote, mapYahooSymbolToTradingView } = require('./tradingview');
 const { fetchTwelveDataOHLCV, fetchTwelveDataQuote, resolveTwelveDataSymbol } = require('./twelvedata');
 const { fetchAlphaVantageOHLCV, fetchAlphaVantageQuote, resolveAlphaVantageSymbol } = require('./alphavantage');
+const fixClient = require('./tfbFixClient');
 
 const MARKET_DATA_TIMEOUT_MS = parseInt(process.env.MARKET_DATA_TIMEOUT_MS || '12000', 10);
 const MARKET_DATA_RETRIES = parseInt(process.env.MARKET_DATA_RETRIES || '2', 10);
@@ -14,6 +15,10 @@ function normalizeProviderName(provider) {
     const value = String(provider || '').trim().toLowerCase();
     if (value === 'alpha_vantage' || value === 'alpha-vantage' || value === 'av') return 'alphavantage';
     return value;
+}
+
+if (PRIMARY_PROVIDER === 'fix' || FALLBACK_PROVIDER === 'fix') {
+    fixClient.connect();
 }
 
 function sleep(ms) {
@@ -73,6 +78,9 @@ async function fetchOHLCVFromProvider(provider, marketSymbol, interval, daysBack
     if (provider === 'tradingview') {
         return fetchTradingViewOHLCV(marketSymbol, interval, daysBack);
     }
+    if (provider === 'fix') {
+        throw new Error('FIX API does not support historical OHLCV data.');
+    }
     throw new Error(`Unsupported market data provider: ${provider}`);
 }
 
@@ -85,6 +93,15 @@ async function fetchQuoteFromProvider(provider, marketSymbol) {
     }
     if (provider === 'tradingview') {
         return fetchTradingViewQuote(marketSymbol);
+    }
+    if (provider === 'fix') {
+        const quote = fixClient.getLatestQuote(marketSymbol);
+        if (quote && quote.bid) {
+            return { price: quote.bid, change: 0, changePercent: 0, high: quote.bid, low: quote.bid, open: quote.bid, source: 'fix' };
+        } else {
+            fixClient.subscribeMarketData(marketSymbol);
+            throw new Error('Subscribed to FIX, waiting for first tick...');
+        }
     }
     throw new Error(`Unsupported market data provider: ${provider}`);
 }
@@ -101,6 +118,11 @@ async function fetchOHLCV(marketSymbol, interval = '1d', daysBack = 100) {
         const skipReason = skipProvider(provider, marketSymbol);
         if (skipReason) {
             logger.info(`[MarketData] Skipping ${provider} for ${marketSymbol}: ${skipReason}`);
+            continue;
+        }
+        
+        if (provider === 'fix') {
+            logger.debug(`[MarketData] Skipping 'fix' for OHLCV because it only supports live quotes.`);
             continue;
         }
 

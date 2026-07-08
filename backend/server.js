@@ -31,12 +31,41 @@ const PORT = process.env.PORT || 5000;
 
 // Security & Middleware
 app.use(helmet({ contentSecurityPolicy: false }));
-// Allow any localhost port in development; restrict to FRONTEND_URL in production
+
+function normalizeOrigin(value) {
+    if (!value) return null;
+    try {
+        const url = new URL(String(value).trim());
+        return `${url.protocol}//${url.host}`;
+    } catch (error) {
+        return null;
+    }
+}
+
+function getAllowedOrigins() {
+    const configured = [process.env.FRONTEND_URL, process.env.CORS_ORIGINS]
+        .filter(Boolean)
+        .flatMap(value => String(value).split(','));
+
+    return new Set(configured.map(normalizeOrigin).filter(Boolean));
+}
+
+const allowedOrigins = getAllowedOrigins();
 const corsOrigin = process.env.NODE_ENV === 'production'
-    ? (process.env.FRONTEND_URL || 'http://localhost:3000')
+    ? (origin, callback) => {
+        if (!origin) return callback(null, true);
+
+        const normalized = normalizeOrigin(origin);
+        if (normalized && allowedOrigins.has(normalized)) {
+            return callback(null, true);
+        }
+
+        logger.warn(`[CORS] Blocked origin: ${origin}`);
+        return callback(new Error('CORS: Not allowed'));
+    }
     : (origin, callback) => {
         // Allow requests with no origin (mobile apps, curl) or any localhost
-        if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
+        if (!origin || /^https?:\/\/localhost:\d+$/.test(origin) || /^https?:\/\/127\.0\.0\.1:\d+$/.test(origin)) {
             callback(null, true);
         } else {
             callback(new Error('CORS: Not allowed'));
@@ -48,7 +77,6 @@ app.use(cors({
     credentials: true,
     exposedHeaders: ['Content-Disposition', 'Content-Type'],
 }));
-
 // Stripe webhook needs raw body
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '10mb' }));
@@ -100,7 +128,8 @@ async function startServer() {
         }
 
         // Start scheduler after DB is ready
-        require('./app/tasks/scheduler');
+        const { startScheduler } = require('./app/tasks/scheduler');
+        await startScheduler();
         // Mandatory reset-time pivot recalculation + history upsert.
         recalculateDailyPivotLevelsAtServerReset();
 

@@ -1,13 +1,20 @@
 const logger = require('../../core/logger');
 const { fetchTradingViewOHLCV, fetchTradingViewQuote, mapYahooSymbolToTradingView } = require('./tradingview');
 const { fetchTwelveDataOHLCV, fetchTwelveDataQuote, resolveTwelveDataSymbol } = require('./twelvedata');
+const { fetchAlphaVantageOHLCV, fetchAlphaVantageQuote, resolveAlphaVantageSymbol } = require('./alphavantage');
 
 const MARKET_DATA_TIMEOUT_MS = parseInt(process.env.MARKET_DATA_TIMEOUT_MS || '12000', 10);
 const MARKET_DATA_RETRIES = parseInt(process.env.MARKET_DATA_RETRIES || '2', 10);
-const PRIMARY_PROVIDER = String(process.env.MARKET_DATA_PROVIDER || 'tradingview').toLowerCase();
-const FALLBACK_PROVIDER = String(
+const PRIMARY_PROVIDER = normalizeProviderName(process.env.MARKET_DATA_PROVIDER || 'tradingview');
+const FALLBACK_PROVIDER = normalizeProviderName(
     process.env.MARKET_DATA_FALLBACK_PROVIDER || (PRIMARY_PROVIDER === 'twelvedata' ? 'tradingview' : PRIMARY_PROVIDER)
-).toLowerCase();
+);
+
+function normalizeProviderName(provider) {
+    const value = String(provider || '').trim().toLowerCase();
+    if (value === 'alpha_vantage' || value === 'alpha-vantage' || value === 'av') return 'alphavantage';
+    return value;
+}
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -37,18 +44,31 @@ function describeSymbol(provider, marketSymbol) {
         const resolved = resolveTwelveDataSymbol(marketSymbol);
         return resolved.supported ? resolved.symbol : marketSymbol;
     }
+    if (provider === 'alphavantage') {
+        const resolved = resolveAlphaVantageSymbol(marketSymbol);
+        return resolved.supported ? resolved.label : marketSymbol;
+    }
     return mapYahooSymbolToTradingView(marketSymbol);
 }
 
 function skipProvider(provider, marketSymbol) {
-    if (provider !== 'twelvedata') return null;
-    const resolved = resolveTwelveDataSymbol(marketSymbol);
-    return resolved.supported ? null : resolved.reason;
+    if (provider === 'twelvedata') {
+        const resolved = resolveTwelveDataSymbol(marketSymbol);
+        return resolved.supported ? null : resolved.reason;
+    }
+    if (provider === 'alphavantage') {
+        const resolved = resolveAlphaVantageSymbol(marketSymbol);
+        return resolved.supported ? null : resolved.reason;
+    }
+    return null;
 }
 
 async function fetchOHLCVFromProvider(provider, marketSymbol, interval, daysBack) {
     if (provider === 'twelvedata') {
         return fetchTwelveDataOHLCV(marketSymbol, interval, daysBack);
+    }
+    if (provider === 'alphavantage') {
+        return fetchAlphaVantageOHLCV(marketSymbol, interval, daysBack);
     }
     if (provider === 'tradingview') {
         return fetchTradingViewOHLCV(marketSymbol, interval, daysBack);
@@ -59,6 +79,9 @@ async function fetchOHLCVFromProvider(provider, marketSymbol, interval, daysBack
 async function fetchQuoteFromProvider(provider, marketSymbol) {
     if (provider === 'twelvedata') {
         return fetchTwelveDataQuote(marketSymbol);
+    }
+    if (provider === 'alphavantage') {
+        return fetchAlphaVantageQuote(marketSymbol);
     }
     if (provider === 'tradingview') {
         return fetchTradingViewQuote(marketSymbol);

@@ -1,4 +1,5 @@
 const net = require('net');
+const tls = require('tls');
 const logger = require('../../core/logger');
 const { EventEmitter } = require('events');
 
@@ -14,7 +15,8 @@ class TfbFixClient extends EventEmitter {
         this.username = process.env.FIX_USERNAME || 'user';
         this.password = process.env.FIX_PASSWORD || 'pass';
 
-        this.client = new net.Socket();
+        this.useTls = process.env.FIX_USE_TLS === 'true' || this.port === 12333;
+        this.client = null;
         this.inSeqNum = 1;
         this.outSeqNum = 1;
         this.connected = false;
@@ -22,8 +24,6 @@ class TfbFixClient extends EventEmitter {
 
         this.buffer = '';
         this.marketDataCache = new Map(); // Symbol -> { bid, ask, time }
-
-        this._setupSocket();
     }
 
     _setupSocket() {
@@ -46,12 +46,28 @@ class TfbFixClient extends EventEmitter {
 
     connect() {
         if (this.connected) return;
-        logger.info(`[FIX Client] Connecting to ${this.host}:${this.port}...`);
-        this.client.connect(this.port, this.host, () => {
-            this.connected = true;
-            logger.info('[FIX Client] Connected. Sending Logon...');
-            this.sendLogon();
-        });
+        logger.info(`[FIX Client] Connecting to ${this.host}:${this.port} (TLS: ${this.useTls})...`);
+        
+        if (this.useTls) {
+            this.client = tls.connect({
+                host: this.host,
+                port: this.port,
+                rejectUnauthorized: false // Often required for broker self-signed certs
+            }, () => {
+                this.connected = true;
+                logger.info('[FIX Client] Connected securely (TLS). Sending Logon...');
+                this.sendLogon();
+            });
+        } else {
+            this.client = new net.Socket();
+            this.client.connect(this.port, this.host, () => {
+                this.connected = true;
+                logger.info('[FIX Client] Connected (TCP). Sending Logon...');
+                this.sendLogon();
+            });
+        }
+        
+        this._setupSocket();
     }
 
     _processBuffer() {

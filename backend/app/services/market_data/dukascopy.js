@@ -1,4 +1,4 @@
-const { getHistoricalData } = require('dukascopy-node');
+const { getHistoricalRates } = require('dukascopy-node');
 const logger = require('../../core/logger');
 
 // Map Yahoo Finance symbols to Dukascopy instrument IDs
@@ -56,7 +56,7 @@ async function fetchDukascopyOHLCV(yahooSymbol, interval = '1d', daysBack = 100)
     logger.debug(`[Dukascopy] Fetching ${dukaSymbol} (${timeframe}) from ${fromDate.toISOString()} to ${toDate.toISOString()}`);
 
     try {
-        const rawData = await getHistoricalData({
+        const rawData = await getHistoricalRates({
             instrument: dukaSymbol,
             dates: {
                 from: fromDate,

@@ -48,9 +48,7 @@ services:
       REDIS_URL: redis://redis:6379
       FRONTEND_URL: https://report.achieverfx.com
       CORS_ORIGINS: https://report.achieverfx.com,https://www.report.achieverfx.com
-      MARKET_DATA_PROVIDER: ${MARKET_DATA_PROVIDER:-alphavantage}
-      MARKET_DATA_FALLBACK_PROVIDER: ${MARKET_DATA_FALLBACK_PROVIDER:-tradingview}
-      MARKET_DATA_RETRIES: ${MARKET_DATA_RETRIES:-0}
+
     depends_on:
       postgres:
         condition: service_healthy

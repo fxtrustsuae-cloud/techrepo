@@ -5,7 +5,7 @@ const { fetchAlphaVantageOHLCV, fetchAlphaVantageQuote, resolveAlphaVantageSymbo
 const { fetchDukascopyOHLCV, fetchDukascopyQuote, resolveDukascopySymbol } = require('./dukascopy');
 const fixClient = require('./tfbFixClient');
 
-const MARKET_DATA_TIMEOUT_MS = parseInt(process.env.MARKET_DATA_TIMEOUT_MS || '12000', 10);
+const MARKET_DATA_TIMEOUT_MS = parseInt(process.env.MARKET_DATA_TIMEOUT_MS || '30000', 10);
 const MARKET_DATA_RETRIES = parseInt(process.env.MARKET_DATA_RETRIES || '2', 10);
 const PRIMARY_PROVIDER = normalizeProviderName(process.env.MARKET_DATA_PROVIDER || 'tradingview');
 const FALLBACK_PROVIDER = normalizeProviderName(

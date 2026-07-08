@@ -29,9 +29,9 @@ function resolveDukascopySymbol(yahooSymbol) {
     }
     // Attempt auto-conversion for standard forex (e.g. EURUSD=X -> eurusd)
     if (yahooSymbol.endsWith('=X')) {
-        return yahooSymbol.replace('=X', '').toLowerCase();
+        return yahooSymbol.replace('=X', '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     }
-    return yahooSymbol.toLowerCase();
+    return yahooSymbol.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 }
 
 function toDukascopyTimeframe(interval) {
@@ -87,8 +87,9 @@ async function fetchDukascopyOHLCV(yahooSymbol, interval = '1d', daysBack = 100)
         
         return candles;
     } catch (error) {
-        logger.error(`[Dukascopy] Error fetching OHLCV for ${dukaSymbol}: ${error.message}`);
-        throw error;
+        const errMsg = error.validationErrors ? JSON.stringify(error.validationErrors) : error.message;
+        logger.error(`[Dukascopy] Error fetching OHLCV for ${dukaSymbol}: ${errMsg}`);
+        throw new Error(errMsg);
     }
 }
 

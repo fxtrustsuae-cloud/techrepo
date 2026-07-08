@@ -2,6 +2,7 @@ const logger = require('../../core/logger');
 const { fetchTradingViewOHLCV, fetchTradingViewQuote, mapYahooSymbolToTradingView } = require('./tradingview');
 const { fetchTwelveDataOHLCV, fetchTwelveDataQuote, resolveTwelveDataSymbol } = require('./twelvedata');
 const { fetchAlphaVantageOHLCV, fetchAlphaVantageQuote, resolveAlphaVantageSymbol } = require('./alphavantage');
+const { fetchDukascopyOHLCV, fetchDukascopyQuote, resolveDukascopySymbol } = require('./dukascopy');
 const fixClient = require('./tfbFixClient');
 
 const MARKET_DATA_TIMEOUT_MS = parseInt(process.env.MARKET_DATA_TIMEOUT_MS || '12000', 10);
@@ -53,6 +54,9 @@ function describeSymbol(provider, marketSymbol) {
         const resolved = resolveAlphaVantageSymbol(marketSymbol);
         return resolved.supported ? resolved.label : marketSymbol;
     }
+    if (provider === 'dukascopy') {
+        return resolveDukascopySymbol(marketSymbol);
+    }
     return mapYahooSymbolToTradingView(marketSymbol);
 }
 
@@ -75,6 +79,9 @@ async function fetchOHLCVFromProvider(provider, marketSymbol, interval, daysBack
     if (provider === 'alphavantage') {
         return fetchAlphaVantageOHLCV(marketSymbol, interval, daysBack);
     }
+    if (provider === 'dukascopy') {
+        return fetchDukascopyOHLCV(marketSymbol, interval, daysBack);
+    }
     if (provider === 'tradingview') {
         return fetchTradingViewOHLCV(marketSymbol, interval, daysBack);
     }
@@ -90,6 +97,9 @@ async function fetchQuoteFromProvider(provider, marketSymbol) {
     }
     if (provider === 'alphavantage') {
         return fetchAlphaVantageQuote(marketSymbol);
+    }
+    if (provider === 'dukascopy') {
+        return fetchDukascopyQuote(marketSymbol);
     }
     if (provider === 'tradingview') {
         return fetchTradingViewQuote(marketSymbol);

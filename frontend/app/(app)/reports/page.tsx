@@ -34,7 +34,7 @@ export default function ReportsPage() {
         try {
             setDownloadingId(report.id);
             const token = localStorage.getItem('token');
-            const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/reports/${report.id}/download?token=${token}`;
+            const url = `${process.env.NEXT_PUBLIC_API_URL || '/api'}/reports/${report.id}/download?token=${token}`;
             
             const anchor = document.createElement('a');
             anchor.href = url;
